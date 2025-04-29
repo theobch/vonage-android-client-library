@@ -76,3 +76,78 @@ if (response.optString("error") != "") {
 ```
 
 Potential error codes: `sdk_no_data_connectivity`, `sdk_connection_error`, `sdk_redirect_error`, `sdk_error`.
+
+## Migrating from `com.vonage:client-sdk-silent-auth` or `com.vonage:client-sdk-number-verification`
+
+`com.vonage:client-library` replaces both `com.vonage:client-sdk-silent-auth` and `com.vonage:client-sdk-number-verification`
+. To migrate from them do the following:
+
+### Update your Dependencies:
+
+You will need to add `com.vonage:client-library` as a [dependency](#installation) and remove either `com.vonage:client-sdk-silent-auth` or `com.vonage:client-sdk-number-verification`
+ depending on which one you were using. 
+
+### Update the Imports:
+
+```kotlin
+// com.vonage:client-sdk-silent-auth
+import com.vonage.silentauth.VGSilentAuthClient
+``` 
+
+or
+
+```kotlin
+// com.vonage:client-sdk-number-verification
+import com.vonage.numberverification.VGNumberVerificationClient
+``` 
+ 
+should be replaced with:
+
+```kotlin
+import com.vonage.clientlibrary.VGCellularRequestClient
+```
+
+### Use the new Client:
+
+```kotlin
+// com.vonage:client-sdk-silent-auth
+VGSilentAuthClient.initializeSdk(this.applicationContext)
+``` 
+
+or
+
+```kotlin
+// com.vonage:client-sdk-number-verification
+VGNumberVerificationClient.initializeSdk(this.applicationContext)
+``` 
+ 
+should be replaced with:
+
+```kotlin
+VGCellularRequestClient.initializeSdk(this.applicationContext)
+```
+
+### Make the new Network Call:
+
+`com.vonage:client-library` uses a params object to pass information to the function that makes the network call. This is a similar approach to `om.vonage:client-sdk-number-verification`, but new if you are using `com.vonage:client-sdk-silent-auth`.
+
+```kotlin
+// com.vonage:client-sdk-silent-auth
+val resp: JSONObject = VGSilentAuthClient.getInstance().openWithDataCellular(URL(endpoint), false)
+```
+
+or 
+
+```kotlin
+// com.vonage:client-sdk-number-verification
+val params = VGNumberVerificationParameters(
+        url = "http://www.vonage.com",
+        headers = mapOf("x-my-header" to "My Value") ,
+        queryParameters = mapOf("query-param" to "value"),
+        maxRedirectCount = 10
+    )
+
+    val response = VGNumberVerificationClient.getInstance().startNumberVerification(params, true)
+```
+
+should be replaced with the `com.vonage:client-library` [example](#force-a-cellular-network-request) above.
