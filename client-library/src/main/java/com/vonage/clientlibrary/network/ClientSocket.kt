@@ -5,6 +5,7 @@ import android.util.Log
 import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.io.OutputStream
+import java.io.IOException
 import java.net.HttpCookie
 import java.net.Socket
 import java.net.URL
@@ -125,7 +126,7 @@ internal class ClientSocket constructor(var tracer: TraceCollector = TraceCollec
         var result: ResponseHandler? = null
         var chunked: Boolean = false
         try {
-            var response: String? = input.use { it.readText() }
+            var response: String? = readMultipleChars(input, 65536)
             tracer.addDebug(Log.DEBUG, TAG, "$response \n")
             tracer.addDebug(Log.DEBUG, TAG, "--------" + "\n")
             response?.let {
@@ -437,6 +438,18 @@ internal class ClientSocket constructor(var tracer: TraceCollector = TraceCollec
                 Build.MANUFACTURER.contains("Genymotion") ||
                 (Build.BRAND.startsWith("generic") && Build.DEVICE.startsWith("generic")) ||
                 Build.PRODUCT.contains("sdk_gphone_x86")
+    }
+
+    @Throws(IOException::class)
+    private fun readMultipleChars(reader: BufferedReader, length: Int): String? {
+        val chars = CharArray(length)
+        val charsRead = reader.read(chars, 0, length)
+        val result: String = if (charsRead != -1) {
+            String(chars, 0, charsRead)
+        } else {
+            ""
+        }
+        return result
     }
 
     companion object {

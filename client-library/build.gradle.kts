@@ -17,7 +17,7 @@ android {
     defaultConfig {
         minSdk = 24
         lint.targetSdk = 35
-        version = "1.0.0"
+        version = "1.0.1"
 
         android.buildFeatures.buildConfig = true
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -25,10 +25,10 @@ android {
 
     buildTypes {
         debug {
-            buildConfigField("String","VERSION_NAME","\"1.0.0\"")
+            buildConfigField("String","VERSION_NAME","\"1.0.1\"")
         }
         release {
-            buildConfigField("String","VERSION_NAME","\"1.0.0\"")
+            buildConfigField("String","VERSION_NAME","\"1.0.1\"")
             isMinifyEnabled=  false
         }
     }
@@ -46,7 +46,7 @@ publishing {
         create<MavenPublication>("aar") {
             groupId = "com.vonage"
             artifactId = "client-library"
-            version = "1.0.0"
+            version = "1.0.1"
             artifact("$buildDir/outputs/aar/${project.name}-release.aar")
             pom {
                 name = "Vonage Client Library"
